@@ -6,7 +6,7 @@
 	<uses-permission android:name="android.permission.CAMERA" />
 	<uses-feature android:name="android.hardware.camera" />
     <uses-sdk
-        android:minSdkVersion="8"
+        android:minSdkVersion="15"
         android:targetSdkVersion="17" />
 
     <application
@@ -17,6 +17,7 @@
         <activity
             android:name="com.example.facedetector.MainActivity"
             android:label="@string/app_name" >
+
 
         </activity>      
         
@@ -31,15 +32,29 @@
             </intent-filter>
              -->
         </activity>
-                <activity
+
+        <activity
             android:name="com.example.facedetector.FaceDetect"
             android:label="@string/app_name" >
-            <intent-filter>
+
+
+        </activity>  
+         
+        <activity
+            android:name="com.example.facedetector.CsdnFaceDetect"
+            android:label="@string/app_name" >
+
+        </activity> 
+        
+        <activity
+            android:name="com.example.facedetector.CsdnCameraFaceDetect"
+            android:label="@string/app_name" >
+           <intent-filter>
                  <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter> 
-        </activity>  
+        </activity> 
     </application>
 
 </manifest>
