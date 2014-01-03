@@ -1,12 +1,10 @@
 package com.example.facedetector;
 
-import android.annotation.TargetApi;
 import android.app.Activity;
 import android.hardware.Camera;
 import android.hardware.Camera.Face;
 import android.hardware.Camera.FaceDetectionListener;
 import android.hardware.Camera.Parameters;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -44,7 +42,6 @@ public class FaceDetect extends Activity {
 				camera.release();
 				camera = null;
 			}
-			
 		    camera = Camera.open(CAMERA_ID);
 		    if (camera != null){
 		    	Log.d(TAG, "Camera opened");
@@ -55,7 +52,16 @@ public class FaceDetect extends Activity {
 				
 			    camera.setFaceDetectionListener(faceDetectionListener);
 			    camera.startPreview();
-			    camera.startFaceDetection();
+			    handler.post(new Runnable(){
+
+					@Override
+					public void run() {
+						// TODO Auto-generated method stub
+						camera.startFaceDetection();
+					}
+			    	
+			    });
+			    
 		    }
 	  }
 	  
@@ -72,7 +78,7 @@ public class FaceDetect extends Activity {
 	  Camera.FaceDetectionListener faceDetectionListener=new MyFaceDetectionListener();
 	  
 	
-   @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
+
 	class MyFaceDetectionListener implements FaceDetectionListener{
 
 		@Override

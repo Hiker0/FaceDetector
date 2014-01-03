@@ -3,13 +3,21 @@ package com.example.facedetector;
 import java.io.IOException;
 import java.util.List;
 
+import com.example.facedetector.FaceDetect.MyFaceDetectionListener;
+
 import android.app.Activity;
+import android.content.Context;
 import android.graphics.ImageFormat;
 import android.hardware.Camera;
+import android.hardware.Camera.Face;
+import android.hardware.Camera.FaceDetectionListener;
 import android.hardware.Camera.Size;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.AttributeSet;
 import android.util.Log;
+import android.view.SurfaceHolder;
+import android.view.SurfaceView;
 import android.view.Window;
 import android.view.WindowManager;
 
@@ -22,27 +30,7 @@ public class MainActivity extends Activity {
 	private CameraPreviewView previewView = null;
 
 	int state = 0;
-	Handler handler = new Handler();
 
-	private class FrameCatcher implements Camera.PreviewCallback {
-		public int mFrames = 0;
-		private final int mExpectedSize;
-
-		public FrameCatcher(int width, int height) {
-			mExpectedSize = width * height * 3 / 2;
-		}
-
-		@Override
-		public void onPreviewFrame(byte[] data, Camera camera) {
-			if (mExpectedSize != data.length) {
-				throw new UnsupportedOperationException("bad size, got "
-						+ data.length + " expected " + mExpectedSize);
-			}
-			mFrames++;
-			camera.addCallbackBuffer(data);
-		}
-
-	}
 
 	private void dumpCameraCaps(int id) {
 		int n = Camera.getNumberOfCameras();
@@ -70,7 +58,7 @@ public class MainActivity extends Activity {
 		cam.release();
 	}
 
-	@SuppressWarnings("deprecation")
+	
 	void startPreview() {
 		Log.d(TAG, "startPreview");
 		Camera.Parameters parameters = camera.getParameters();
@@ -87,9 +75,6 @@ public class MainActivity extends Activity {
 
 		camera.setDisplayOrientation(90);
 
-		FrameCatcher catcher = new FrameCatcher(640, 480);
-		camera.setPreviewCallbackWithBuffer(null);
-		camera.setPreviewCallbackWithBuffer(catcher);
 
 		int bufferSize;
 		bufferSize = 640 * 480 * ImageFormat.getBitsPerPixel(imageFormat) / 8;
@@ -183,7 +168,7 @@ public class MainActivity extends Activity {
 
 		previewView = (CameraPreviewView) this
 				.findViewById(R.id.camera_preview);
-
+		previewView.setHolderCallback(new SurfaceCallback());
 		dumpCameraCaps(CAMERA_ID);
 	}
 
@@ -191,6 +176,11 @@ public class MainActivity extends Activity {
 	protected void onDestroy() {
 		// TODO Auto-generated method stub
 		Log.d(TAG, "onDestroy");
+		if (this.camera != null) {
+			stopPreView();
+			this.camera.release();
+			this.camera = null;
+		}
 		super.onDestroy();
 	}
 
@@ -198,11 +188,7 @@ public class MainActivity extends Activity {
 	protected void onPause() {
 		// TODO Auto-generated method stub
 		Log.d(TAG, "onPause");
-		if (this.camera != null) {
-			stopPreView();
-			this.camera.release();
-			this.camera = null;
-		}
+
 		super.onPause();
 	}
 
@@ -210,17 +196,6 @@ public class MainActivity extends Activity {
 	protected void onResume() {
 		// TODO Auto-generated method stub
 		Log.d(TAG, "onResume");
-		int n = Camera.getNumberOfCameras();
-		Log.d(TAG, "getNumberOfCameras=" + n);
-		if (n > 1) {
-			this.camera = Camera.open(CAMERA_ID);
-		}
-
-		if (this.camera != null) {
-
-			startPreview();
-
-		}
 
 		super.onResume();
 	}
@@ -237,8 +212,41 @@ public class MainActivity extends Activity {
 		// TODO Auto-generated method stub
 		Log.d(TAG, "onStop");
 		super.onStop();
+		
 	}
+	
+	
+	public class SurfaceCallback implements SurfaceHolder.Callback {
 
+		@Override
+		public void surfaceChanged(SurfaceHolder holder, int format, int width,
+				int height) {
+			// TODO Auto-generated method stub
+			
+		}
 
+		@Override
+		public void surfaceCreated(SurfaceHolder holder) {
+			// TODO Auto-generated method stub
+			
+			int n = Camera.getNumberOfCameras();
+			Log.d(TAG, "getNumberOfCameras=" + n);
+			if (n > 1) {
+				camera = Camera.open(CAMERA_ID);
+			}
 
+			if (camera != null) {
+
+				startPreview();
+
+			}
+		}
+
+		@Override
+		public void surfaceDestroyed(SurfaceHolder holder) {
+			// TODO Auto-generated method stub
+			
+		}
+
+	}
 }
