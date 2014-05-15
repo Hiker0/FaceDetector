@@ -42,7 +42,7 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
-public class CsdnCameraFaceDetect extends Activity {
+public class CameraFaceDetect extends Activity {
         private static final String TAG = "TakeActivity";
     private SurfaceView surfaceView;
     private Camera camera = null;
@@ -56,14 +56,14 @@ public class CsdnCameraFaceDetect extends Activity {
             window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);//高亮
         setContentView(R.layout.csdn_camera_facedetect);
         surfaceView =(SurfaceView)this.findViewById(R.id.surfaceView);
-        surfaceView.getHolder().setFixedSize(640, 480);        //设置分辨率
+        surfaceView.getHolder().setFixedSize(960, 540);        //设置分辨率
         /*下面设置Surface不维护自己的缓冲区，而是等待屏幕的渲染引擎将内容推送到用户面前*/
         surfaceView.getHolder().setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
         surfaceView.getHolder().addCallback(new SurfaceCallback());
         Button btn = (Button)findViewById(R.id.takepicture);
         btn.setOnClickListener(new View.OnClickListener() {
                         public void onClick(View v) {
-                                camera.autoFocus(null);//自动对焦
+                                camera.autoFocus(null);//自动对焦 
                                 camera.takePicture(null, null, new TakePictureCallback());        }
                 });
     }

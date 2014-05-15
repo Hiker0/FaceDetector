@@ -28,7 +28,7 @@ import android.view.WindowManager;
 //人脸识别的关键类
 
 
-public class CsdnFaceDetect extends Activity {
+public class MyFaceDetect extends Activity {
 	final static String TAG=  "CsdnFaceDetect";
 	private Camera mCameraDevice = null;
 	Handler mHandler = new Handler();
